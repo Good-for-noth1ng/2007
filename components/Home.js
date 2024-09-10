@@ -81,7 +81,6 @@ const Home = () => {
 
   React.useEffect(() => {
     console.log(downloadQueue)
-    // ToastAndroid.show('LALLALALALALLALALA', ToastAndroid.LONG)
     if (downloadQueue.length > 0) {
       download(downloadQueue[0].url, downloadQueue[0].onGettingChunk, downloadQueue[0].name, downloadQueue[0].ext)
     }
@@ -145,13 +144,15 @@ const Home = () => {
             <FontAwesome name='music' size={20} color={color}/>
           )
         }}/> */}
-        <Drawer.Screen name='MessagesRoute' component={MessagesRoute} options={{
+
+        {/* <Drawer.Screen name='MessagesRoute' component={MessagesRoute} options={{
           drawerIcon: ({color}) => (
             <FontAwesome name='envelope' size={20} color={color}/>
           ),
           headerShown: false,
           drawerLabel: lang == 'ru' ? 'Сообщения' : 'Messages'
-        }}/>
+        }}/> */}
+
         <Drawer.Screen name='Communities' component={GropsRoute} options={{
           drawerIcon: ({color}) => (
             <FontAwesome name='users' size={20} color={color}/>

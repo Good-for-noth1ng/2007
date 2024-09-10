@@ -107,6 +107,7 @@ const Favorites = ({navigation}) => {
             openedPost={true}
             accessToken={accessToken}
             func={popFav}
+            lang={lang}
           />
         )
       }
@@ -119,6 +120,7 @@ const Favorites = ({navigation}) => {
           id={item.key}
           openedPost={true}
           accessToken={accessToken}
+          lang={lang}
           func={popFav}
         />
       )

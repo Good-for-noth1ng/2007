@@ -25,7 +25,7 @@ const Login = ({navigation}) => {
   return (
     // <View>
     <SafeAreaView style={[styles.mainContainer, isLightTheme ? {backgroundColor: COLORS.white} : {backgroundColor: COLORS.background_dark}]}>
-      <Header screenName={lang == 'ru' ? 'Авторизация' : 'Authorization'} isLight={isLightTheme}/>
+      <Header screenName={lang == 'ru' ? 'Вход' : 'Sign in'} isLight={isLightTheme}/>
       {/* <ScrollView style={{flex: 1}}> */}
         <View style={styles.heroButtonContainer}>
           <View style={styles.textContainer}>

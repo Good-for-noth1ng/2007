@@ -97,7 +97,7 @@ const DrawerSwitchersContainer = () => {
         falseText={lang == 'ru' ? 'Не в сети' : 'Offline'}
         trueText={lang == 'ru' ? 'В сети' : 'Online'}
       />
-      <DrawerToggler
+      {/* <DrawerToggler
         trueIcon={
           <SimpleLineIcons name='envelope-open' size={20} color={COLORS.white}/>
         }
@@ -108,8 +108,8 @@ const DrawerSwitchersContainer = () => {
         falseText={lang == 'ru' ? 'Оставлять непрочитанными' : 'Mark as unread'}
         currentState={allowMarkAsRead}
         setNewState={changeReadStatus}
-      />
-      <DrawerToggler 
+      /> */}
+      {/* <DrawerToggler 
         trueIcon={
           <MaterialCommunityIcons name='pencil-outline' size={20} color={COLORS.white}/>
         }
@@ -120,7 +120,7 @@ const DrawerSwitchersContainer = () => {
         falseText={lang =='ru' ? 'Скрыть набор' : 'Hide typing'}
         currentState={allowSeeTyping}
         setNewState={changeTypingStatus}
-      />
+      /> */}
       <DrawerToggler 
         trueIcon={
           <Octicons name='moon' size={20} color={COLORS.white}/>

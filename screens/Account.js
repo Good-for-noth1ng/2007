@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, Dimensions, ActivityIndicator, Image, ScrollView, TextInput, TouchableOpacity, Modal } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Dimensions, ActivityIndicator, Image, ScrollView, TextInput, TouchableOpacity, Modal, ToastAndroid } from 'react-native'
 import React from 'react'
 import * as Calendar from 'expo-calendar' 
 import * as Localization from 'expo-localization'
@@ -27,23 +27,52 @@ const Account = ({navigation}) => {
   const userId = userInfo.userId
   
   // const listItemsData = useSelector(state => state.options.account.items)
+  const [applyChangeOpacity, setApplyChangeOpacity] = React.useState(0.5)
   const [isLoading, setIsloading] = React.useState(true)
   const [firstName, setFirstName] = React.useState()
+  const firstNameOrig = React.useRef()
   const [lastName, setLastName] = React.useState()
+  const lastNameOrig = React.useRef()
   const [screenName, setScreenName] = React.useState()
+  const screenNameOrig = React.useRef()
   const [gender, setGender] = React.useState()
+  const genderOrig = React.useRef()
   const [birthday, setBirthday] = React.useState()
+  const birthdayOrig = React.useRef()
   const [isModalVisible, setIsModalVisible] = React.useState(false)
   const [hometown, setHometown] = React.useState('')
+  const hometownOrig = React.useRef('')
   const [status, setStatus] = React.useState('')
+  const statusOrig = React.useRef('')
   const [relationStatus, setRelationStatus] = React.useState()
+  const relationStatusOrig = React.useRef()
   const [bdateVis, setBdateVis] = React.useState()
+  const bdateVisOrig = React.useRef() 
   const [phoneNum, setPhoneNum] = React.useState()
   const dropdownCoords = React.useRef()
   
   const curDate = new Date()
   const year = curDate.getFullYear() - 14
-  const maxDate = `${year}-01-01`
+  const month = curDate.getMonth()
+  const maxDate = `${year}-${month + 1}-01`
+
+  React.useEffect(() => {
+    if (
+      firstName != firstNameOrig.current ||
+      lastName != lastNameOrig.current ||
+      screenName != screenNameOrig.current ||
+      gender != genderOrig.current || 
+      birthday != birthdayOrig.current ||
+      hometown != hometownOrig.current ||
+      status != statusOrig.current || 
+      relationStatus != relationStatusOrig.current ||
+      bdateVis != bdateVisOrig.current
+    ) {
+      setApplyChangeOpacity(1)
+    } else {
+      setApplyChangeOpacity(0.5)
+    }
+  }, [firstName, lastName, screenName, gender, birthday, hometown, status, relationStatus, bdateVis])
 
   const fetchSettings = async () => {
     const getAccountSettingsUrl = `https://api.vk.com/method/account.getProfileInfo?access_token=${accessToken}&v=5.131`
@@ -60,14 +89,23 @@ const Account = ({navigation}) => {
       day = '0' + day
     }
     setHometown(data.response.home_town)
+    hometownOrig.current = data.response.home_town
     setFirstName(data.response.first_name)
+    firstNameOrig.current = data.response.first_name
     setLastName(data.response.last_name)
+    lastNameOrig.current = data.response.last_name
     setScreenName(data.response.screen_name)
+    screenNameOrig.current = data.response.screen_name
     setGender(data.response.sex)
-    setBirthday(`${year}-${month}-${day}`)
+    genderOrig.current = data.response.sex
+    setBirthday(`${year}/${month}/${day}`)
+    birthdayOrig.current = `${year}/${month}/${day}`
     setBdateVis(data.response.bdate_visibility)
+    bdateVisOrig.current = data.response.bdate_visibility
     setStatus(data.response.status)
+    statusOrig.current = data.response.status
     setRelationStatus(`${data.response.relation}`)
+    relationStatusOrig.current = `${data.response.relation}`
     setPhoneNum(data.response.phone)
     setIsloading(false)
   }
@@ -111,8 +149,26 @@ const Account = ({navigation}) => {
     }
   }
 
-  const applyChange = () => {
-
+  const applyChange = async () => {
+    const url = `https://api.vk.com/method/account.saveProfileInfo?access_token=${accessToken}&v=5.131`
+    const params = `&first_name=${firstName}&last_name=${lastName}&screen_name=${screenName}&sex=${gender}&relation=${relationStatus}&bdate=${birthday}&bdate_visibility=${bdateVis}&home_town=${hometown}&status=${status}`
+    setIsloading(true)
+    const res = await fetch(url + params)
+    const data = await res.json()
+    if (data.response.changed === 1) {
+      firstNameOrig.current = firstName
+      lastNameOrig.current = lastName
+      screenNameOrig.current = screenName
+      genderOrig.current = gender
+      birthdayOrig.current = birthday
+      hometownOrig.current = hometown
+      statusOrig.current = status
+      relationStatusOrig.current = relationStatus
+      bdateVisOrig.current = bdateVis
+      setIsloading(false)
+    } else {
+      ToastAndroid.show(lang == 'ru' ? 'Ошибка соединения' : 'Network error')
+    }
   }
 
   return (
@@ -122,7 +178,12 @@ const Account = ({navigation}) => {
         iconComponent={<AntDesign name='arrowleft' size={30} color={COLORS.white}/>}
         headerName={<Text style={{color: COLORS.white, fontSize: 18, fontWeight: 'bold'}}>{lang == 'ru' ? 'Аккаунт' : 'Account'}</Text>}
         iconTouchHandler={goBack}
-        rightsideIconComponent={<Octicons name='check' color={COLORS.white} size={30}/>}
+        rightsideIconComponentTouchHandler={applyChangeOpacity == 1 ? applyChange : () => {}}
+        rightsideIconComponent={
+          <View style={{justifyContent: 'center', alignItems: 'center', opacity: applyChangeOpacity}}>
+            <Octicons name='check' color={COLORS.white} size={30}/>
+          </View> 
+        }
       />
       <Modal 
         visible={isModalVisible}
@@ -142,9 +203,9 @@ const Account = ({navigation}) => {
               lang: lang
             }}
             mode="date"
-            onDateChange={(date) => {
-              setBirthday(date)
-            }}
+            // onDateChange={(date) => {
+            //   setBirthday(date)
+            // }}
             minimumDate="1901-01-01"
             maximumDate={maxDate}
             current={birthday} //year-month-day

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Platform, Image, Modal, Dimensions, Animated, ToastAndroid } from 'react-native'
 import React from 'react'
 import uuid from 'react-native-uuid';
+import * as Clipboard from 'expo-clipboard'
 import { useDispatch } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -16,6 +17,9 @@ const PostFiles = ({postDocs, isLightTheme, lang}) => {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = React.useState(false)
   const openImageIndex = React.useRef(0)
+  const isDropdownHidden = React.useRef(true)
+  const shouldHideTopAndBottom = React.useRef(false)
+
   const hideDropdownAnim = React.useRef(new Animated.Value(0)).current
   const hidePhotoInfoAnim = React.useRef(new Animated.Value(0)).current
   
@@ -61,16 +65,26 @@ const PostFiles = ({postDocs, isLightTheme, lang}) => {
     })
   }
   const copyImgLink = async () => {
-    const pre = preview.photo.sizes.sort(function(a, b){return b.width - a.width})
-    await Clipboard.setStringAsync(pre[0].src)
+    console.log(postDocs.map(doc => console.log(doc.url)))
+    const urls = postDocs.map(doc => {
+      if (doc.ext === 'png' || doc.ext === 'jpg' || doc.ext === 'jpeg' || doc.ext === 'gif') {
+        return doc.url
+      }
+    })
+    await Clipboard.setStringAsync(urls[openImageIndex.current])
     if (Platform.OS === "android") {
       ToastAndroid.show(lang == 'ru' ? 'Скопировано в буфер обмена' : 'Copied!', ToastAndroid.SHORT)
     }
   }
 
   const startDownload = async () => {
+    const urls = postDocs.map(doc => {
+      if (doc.ext === 'png' || doc.ext === 'jpg' || doc.ext === 'jpeg' || doc.ext === 'gif') {
+        return doc.url
+      }
+    })
     await closeDropdown(30).then(() => {
-      dispatch(push({url: imagesForSlides[openImageIndex.current].props.source.uri}))
+      dispatch(push({url: urls[openImageIndex.current]}))
     })
   }
 
@@ -249,7 +263,7 @@ const PostFiles = ({postDocs, isLightTheme, lang}) => {
             // console.log(doc.preview.photo.sizes[0])
             doc.preview.photo.sizes.sort(function(a, b){return b.width - a.width})
             return (
-              <TouchableOpacity style={{width: '100%', aspectRatio: 1.5}} onPress={() => setModalVisible(!modalVisible)}>
+              <TouchableOpacity activeOpacity={0.8} key={doc.id} style={{width: '100%', aspectRatio: 1.5}} onPress={() => setModalVisible(!modalVisible)}>
                 <Image style={{width: '100%', height: '100%'}} source={{uri: doc.preview.photo.sizes[0].src}}/>
                 <Text style={{fontSize: 12, textTransform: 'uppercase', position: 'absolute', left: '75%', top: '85%', backgroundColor: COLORS.black, borderRadius: 5, padding: 3, color: COLORS.white, opacity: 0.7}}>
                   {doc.ext} {size}{quantity}

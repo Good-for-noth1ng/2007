@@ -77,7 +77,7 @@ const NewsTitleSwitcher = ({ isLightTheme }) => {
         <Text style={styles.selectedTextStyle}>
           {
             lang == 'ru' ?
-            currentPage == 'News' ? 'Новости' : 'Рекоммендации' :
+            currentPage == 'News' ? 'Новости' : 'Рекомендации' :
             currentPage 
           }
         </Text>
@@ -112,7 +112,7 @@ const NewsTitleSwitcher = ({ isLightTheme }) => {
           ]} 
           onPress={onRecommendedOptionPress}
         >
-          <Text style={[styles.option, isLightTheme ? {color: COLORS.black} : {color: COLORS.white}]}>{lang == 'ru' ? 'Рекоммендации' : 'Recommended'}</Text>
+          <Text style={[styles.option, isLightTheme ? {color: COLORS.black} : {color: COLORS.white}]}>{lang == 'ru' ? 'Рекомендации' : 'Recommended'}</Text>
         </TouchableOpacity>
       </Animated.View>
       <Animated.View style={{width: shadow, height: shadow, position: 'absolute', left: '-100%'}}>
