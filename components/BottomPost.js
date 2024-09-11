@@ -8,16 +8,23 @@ import { getShortagedNumber } from '../utils/numShortage'
 import { setOpenedPost, setScrolling } from '../redux/newsSlice'
 
 const BottomPost = ({dataComments, dataLikes, dataReposts, openedPost, navigation, data, isLightTheme, accessToken}) => {
+    // console.log(accessToken, data)
     // const [commentsCount, setCommentsCount] = useState(dataComments?.count !== undefined ? dataComments.count : 0)
     const [likesCount, setLikesCount] = useState(dataLikes?.count !== undefined ? dataLikes.count : 0)
     // const [repostsCount, setRepostsCount] = useState(dataReposts?.count !== undefined ? dataReposts.count : 0)
-    const [isLikePressed, setIsLikePressed] = useState(false)
+    const [isLikePressed, setIsLikePressed] = useState(data?.likes?.user_likes === 1)
 
-    const handleLikePress = () => {
+    const handleLikePress = async () => {
       if (!isLikePressed) {
+        const url = `https://api.vk.com/method/likes.add?type=post&v=5.131&access_token=${accessToken}&owner_id=${data.owner_id}&item_id=${data.id}&access_key=${data.key}`
+        await fetch(url)
+        // const parsed = await res.json()
+        // console.log(parsed)
         setIsLikePressed(true)
         setLikesCount(count => count + 1)
       } else {
+        const url = `https://api.vk.com/method/likes.delete?type=post&v=5.131&access_token=${accessToken}&owner_id=${data.owner_id}&item_id=${data.id}&access_key=${data.key}`
+        await fetch(url)
         setIsLikePressed(false)
         setLikesCount(count => count - 1)
       }

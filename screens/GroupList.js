@@ -29,7 +29,7 @@ const GroupList = ({navigation}) => {
   const remainToFetchNum = React.useRef()
   const offset = React.useRef(0)
   const searchQuery = React.useRef('')
-  const count = 5
+  const count = 400
   const [visitedGroups, setVisitedGroups] = React.useState([])
   const [groupsCounterName, setGroupsCounterName] = React.useState(lang == 'ru' ? 'Все сообщества' :'All communities')
   const slideAnimation = React.useRef(new Animated.Value(2000)).current
