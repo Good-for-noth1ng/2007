@@ -129,6 +129,9 @@ const Topic = ({navigation, route}) => {
         ownerId={item.from_id}
         isLightTheme={isLightTheme}
         openCommentMenu={openCommentMenu}
+        accessToken={accessToken}
+        type={'topic_comment'}
+        lang={lang}
       />
     )
   }

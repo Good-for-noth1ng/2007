@@ -144,6 +144,8 @@ const VideoComments = ({ navigation, route }) => {
         openCommentMenu={openCommentMenu}
         author={item.author}
         lang={lang}
+        accessToken={accessToken}
+        type={'video_comment'}
       />
     )
   }

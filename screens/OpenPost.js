@@ -222,6 +222,8 @@ const OpenPost = ({navigation, route}) => {
       openCommentMenu={openCommentMenu}
       author={item.author}
       lang={lang}
+      accessToken={accessToken}
+      type={'comment'}
     />
   )
 
@@ -260,6 +262,7 @@ const OpenPost = ({navigation, route}) => {
             postId={post.id ? post.id : post.post_id}
             commentsSortType={commentsSortType}
             lang={lang}
+            accessToken={accessToken}
             // setCommentsSortType={setCommentsSortType}
           />
         </>
@@ -286,6 +289,7 @@ const OpenPost = ({navigation, route}) => {
           ownerId={post.owner_id ? post.owner_id : post.source_id}
           postId={post.id ? post.id : post.post_id}
           commentsSortType={commentsSortType}
+          accessToken={accessToken}
           // setCommentsSortType={setCommentsSortType}
         />
       </>

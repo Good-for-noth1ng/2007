@@ -7,19 +7,23 @@ import CountSortComments from './CountSortComments'
 import { getShortagedNumber } from '../utils/numShortage'
 import { COLORS } from '../constants/theme'
 
-const OpenedPostBottom = ({lang, reposts, likes, views, comments, isLightTheme, ownerId, postId, navigation, commentsSortType, setCommentsSortType}) => {
+const OpenedPostBottom = ({lang, reposts, likes, views, comments, isLightTheme, ownerId, postId, navigation, commentsSortType, setCommentsSortType, accessToken}) => {
   const [isLikePressed, setIsLikePressed] = useState(false);
   const [likesCount, setLikesCount] = useState(likes !== undefined ? likes : 0);
   const [repostsCount, setRepostsCount] = useState(reposts !== undefined ? reposts : 0);
 
-  const handleLikePress = useCallback(() => {
+  const handleLikePress = async () => {
     if (isLikePressed) {
+      const url = `https://api.vk.com/method/likes.delete?type=post&v=5.131&access_token=${accessToken}&owner_id=${ownerId}&item_id=${postId}`
+      await fetch(url)
       setLikesCount(likesCount - 1);
     } else {
+      const url = `https://api.vk.com/method/likes.add?type=post&v=5.131&access_token=${accessToken}&owner_id=${ownerId}&item_id=${postId}`
+      await fetch(url)
       setLikesCount(likesCount + 1);
     }
     setIsLikePressed(!isLikePressed);
-  }, [isLikePressed])
+  }
   
   const navigateToReactedUsersList = () => {
     navigation.push('ReactedOnPostUsers', {ownerId: ownerId, postId: postId})

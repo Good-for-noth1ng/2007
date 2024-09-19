@@ -204,11 +204,15 @@ const OpenedPhoto = ({ navigation, route }) => {
     navigation.push('ReactedOnPhoto', {ownerId, photoId})
   }
 
-  const onLikePress = () => {
+  const onLikePress = async () => {
     if (isLiked) {
+      const url = `https://api.vk.com/method/likes.delete?type=photo&v=5.131&access_token=${accessToken}&owner_id=${ownerId}&item_id=${photoId}`
+      await fetch(url)
       setLikesCount(prev => prev - 1)
       setIsLiked(false)
     } else {
+      const url = `https://api.vk.com/method/likes.add?type=photo&v=5.131&access_token=${accessToken}&owner_id=${ownerId}&item_id=${photoId}`
+      await fetch(url)
       setLikesCount(prev => prev + 1)
       setIsLiked(true)
     }
@@ -238,13 +242,13 @@ const OpenedPhoto = ({ navigation, route }) => {
           text ?
           <>
             <View style={[{padding: 5}, isLightTheme ? {backgroundColor: COLORS.white} : {backgroundColor: COLORS.primary_dark}]}>
-              <Text style={{fontSize: 15, fontWeight: 'bold'}}>{text}</Text>
+              <Text style={[{fontSize: 15, fontWeight: 'bold'}, isLightTheme ? {color: COLORS.black} : {color: COLORS.primary_text}]}>{text}</Text>
             </View>
           </> : 
           null
         }
         {
-          text && commentsCount > -1 ?
+          text && (commentsCount > -1) ?
           <DividerWithLine 
               dividerLineHeight={1} 
               dividerLineWidth={'93%'} 
@@ -270,6 +274,14 @@ const OpenedPhoto = ({ navigation, route }) => {
             </TouchableOpacity>
           </View> : null
         }
+        <DividerWithLine 
+          dividerLineHeight={1} 
+          dividerLineWidth={'95%'}
+          dividerHeight={20}
+          linePosition={'center'}
+          dividerLineColor={COLORS.light_smoke} 
+          dividerColor={isLightTheme ? COLORS.white : COLORS.primary_dark}
+        />
         {
           commentsCount > -1 ?
           <>
@@ -323,6 +335,9 @@ const OpenedPhoto = ({ navigation, route }) => {
         isLightTheme={isLightTheme}
         openCommentMenu={openCommentMenu}
         author={item.author}
+        lang={lang}
+        accessToken={accessToken}
+        type='photo_comment'
       />
     )
   }
@@ -374,11 +389,12 @@ const OpenedPhoto = ({ navigation, route }) => {
         ItemSeparatorComponent={commentSeparator}
         onEndReached={fetchMoreComments}
       />
-      {commentsCount > -1 ? <TextInputField isLightTheme={isLightTheme} accessToken={accessToken}/> : null}
+      {commentsCount > -1 ? <TextInputField lang={lang} isLightTheme={isLightTheme} accessToken={accessToken}/> : null}
       <CommentsOverlay 
         slideAnimation={slideAnimation}
         isLightTheme={isLightTheme}
         navigation={navigation}
+        lang={lang}
       />
       <GlobalShadow />
     </SafeAreaView>

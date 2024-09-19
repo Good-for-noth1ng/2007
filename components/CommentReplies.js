@@ -7,7 +7,7 @@ import { setDataForFetchingCommentThread } from '../redux/commentsSlice'
 import { COLORS } from '../constants/theme'
 import DividerWithLine from './DividerWithLine'
 
-const CommentReplies = ({lang, threadComments, threadCount, fetchProfileInfo, startOfThreadId, navigation, ownerId, postId, isLightTheme, openCommentMenu}) => {
+const CommentReplies = ({lang, threadComments, threadCount, fetchProfileInfo, startOfThreadId, navigation, ownerId, postId, isLightTheme, openCommentMenu, accessToken, type}) => {
   // const dispatch = useDispatch()
 
   //TODO: pass props directly to screen
@@ -41,6 +41,8 @@ const CommentReplies = ({lang, threadComments, threadCount, fetchProfileInfo, st
                 navigation={navigation}
                 attachments={threadComments[0].attachments}
                 is_deleted={threadComments[0].is_deleted}
+                accessToken={accessToken}
+                type={type}
               />
               <DividerWithLine dividerColor={isLightTheme ? COLORS.white : COLORS.primary_dark} dividerHeight={5}/>
               <CommentReply
@@ -58,6 +60,8 @@ const CommentReplies = ({lang, threadComments, threadCount, fetchProfileInfo, st
                 navigation={navigation}
                 attachments={threadComments[1].attachments}
                 is_deleted={threadComments[1].is_deleted}
+                accessToken={accessToken}
+                type={type}
               />
               <DividerWithLine dividerColor={!isLightTheme ? COLORS.white : COLORS.primary_dark} dividerHeight={7}/>
               {
@@ -84,6 +88,8 @@ const CommentReplies = ({lang, threadComments, threadCount, fetchProfileInfo, st
               ownerId={ownerId}
               navigation={navigation}
               attachments={threadComments[0].attachments}
+              accessToken={accessToken}
+              type={type}
             /> 
         : null
       }

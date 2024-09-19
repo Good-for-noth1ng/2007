@@ -9,46 +9,50 @@ if (Platform.OS === 'android') {
   }
 }
 
-const PostText = ({dataText, toOpen, isLightTheme}) => {
-  let postText = ''
-  let readMoreText
-  if (dataText !== undefined) {
-    if (dataText.split(' ').length > 50 && toOpen) {
-      postText = dataText.split(' ').slice(0, 70).join(' ')
-      readMoreText = true
-    } else {
-      readMoreText = false
-      postText = dataText
-    }
-  } else {
-    postText = ''
-    readMoreText = false
-  }
-  const [text, setText] = useState(postText)
-  const [readMore, setReadMore] = useState(readMoreText)
+const PostText = ({dataText, toOpen, isLightTheme, lang}) => {
+  // let postText = ''
+  // let readMoreText
+  // if (dataText !== undefined) {
+  //   if (dataText.split(' ').length > 50 && toOpen) {
+  //     postText = dataText.split(' ').slice(0, 70).join(' ')
+  //     readMoreText = true
+  //   } else {
+  //     readMoreText = false
+  //     postText = dataText
+  //   }
+  // } else {
+  //   postText = ''
+  //   readMoreText = false
+  // }
+  // const [text, setText] = React.useState(postText)
+  const [readMore, setReadMore] = React.useState(dataText.length > 700)
+  const [numOfLines, setNumOfLines] = React.useState(12)
   const handleReadMore = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setText(dataText)
+    // setText(dataText)
+    setNumOfLines(0)
     setReadMore(false)
   }
-   
+  
   return (
     <View style={styles.textContainer}>
-      <Text style={isLightTheme ? styles.textLight : styles.textDark}>
-        {getHyperlinkInText(text)}
-        {readMore ? '...' : ''}
+      <Text numberOfLines={readMore && toOpen ? numOfLines : 0} style={isLightTheme ? styles.textLight : styles.textDark }>
+        {getHyperlinkInText(dataText)}
+        {/* {readMore ? '...' : ''} */}
       </Text>
-        {readMore ? 
+      {
+        readMore && toOpen ? 
           <TouchableOpacity 
             onPress={handleReadMore} 
             style={{width: '100%', height: 28}} 
             activeOpacity={0.6}
           >
             <Text style={styles.showMoreText}>
-              {'Read more...'}
+              {lang == 'ru' ? 'Читать дальше...' : 'Read more...'}
             </Text>
           </TouchableOpacity>
-        : null}
+        : null
+      }
     </View>
   )
 }

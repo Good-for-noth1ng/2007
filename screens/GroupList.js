@@ -98,8 +98,24 @@ const GroupList = ({navigation}) => {
 
   const fetchUsersGroups = async () => {
     const getIdsUrl = `https://api.vk.com/method/groups.get?access_token=${accessToken}&v=5.131&extended=1&fields=activity,members_count&count=${count}&offset=${offset.current}`
-    let response = await fetch(getIdsUrl)
+    // let response = await fetch(getIdsUrl)
+    // let data = await response.json()
+    let response = await fetch(`https://api.vk.com/method/groups.get?v=5.131&extended=1&fields=activity,members_count&count=${count}&offset=${offset.current}`, {
+      method: 'POST',
+      headers: {
+        "Authorization": `Bearer ${accessToken}`
+      }
+      // body: JSON.stringify({
+      //   "access_token": accessToken,
+      //   "v": 5.131,
+      //   "extended": 1,
+      //   "fields": 'activity,members_count',
+      //   "count": count,
+      //   "offset": offset.current,
+      // })
+    })
     let data = await response.json()
+    // console.log(data)
     offset.current += count
     const items = data.response.items.map(item => {return {...item, key: uuid.v4()}})
     return {
@@ -219,9 +235,14 @@ const GroupList = ({navigation}) => {
     // } 
     // connectionController.current = new AbortController()
     // const signal = connectionController.current.signal
-    let groupSearchUrl = `https://api.vk.com/method/groups.search?q=${searchQuery.current}&access_token=${accessToken}&v=5.131&count=${count}&offset=${offset.current}&sort=${chosenSortType}`
+    let groupSearchUrl = `https://api.vk.com/method/groups.search?q=${searchQuery.current}&v=5.131&count=${count}&offset=${offset.current}&sort=${chosenSortType}`
     if (chosenCommunityType !== '') { groupSearchUrl += `&type=${chosenCommunityType}`}
-    const searchResponse = await fetch(groupSearchUrl)
+    const searchResponse = await fetch(groupSearchUrl, {
+      method: 'POST',
+      headers: {
+        "Authorization": `Bearer ${accessToken}`
+      }
+    })
     const searchData = await searchResponse.json()
     const groupsNum = searchData.response.count
     // console.log(searchData)
@@ -230,8 +251,13 @@ const GroupList = ({navigation}) => {
     const ids = groupsItems.map(item => {
       return item.id
     }).join()
-    const getGroupUrl = `https://api.vk.com/method/groups.getById?group_ids=${ids}&access_token=${accessToken}&fields=members_count,activity&v=5.131`
-    const groupsListResponse = await fetch(getGroupUrl)
+    const getGroupUrl = `https://api.vk.com/method/groups.getById?group_ids=${ids}&fields=members_count,activity&v=5.131`
+    const groupsListResponse = await fetch(getGroupUrl, {
+      method: 'POST',
+      headers: {
+        "Authorization": `Bearer ${accessToken}`
+      }
+    })
     const data = await groupsListResponse.json()
     const items = data.response.map(item => {return {...item, key: uuid.v4()}})
     return {

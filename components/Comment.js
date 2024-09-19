@@ -12,7 +12,7 @@ import DividerWithLine from './DividerWithLine'
 import CommentAttachments from './CommentAttachments'
 import { getHyperlinkInText } from '../utils/hyperlinks'
 
-const Comment = ({from_id, is_deleted, attachments, commentText, commentDate, likes, threadCount, threadComments, commentId, navigation, postId, ownerId, isLightTheme, openCommentMenu, author, lang}) => {
+const Comment = ({from_id, is_deleted, attachments, commentText, commentDate, likes, threadCount, threadComments, commentId, navigation, postId, ownerId, isLightTheme, openCommentMenu, author, lang, accessToken, type='comment'}) => {
   const dispatch = useDispatch() 
   const name = author?.name ? author?.name : `${author?.first_name} ${author?.last_name}`
   const photoUrl = author?.photo_100
@@ -27,11 +27,23 @@ const Comment = ({from_id, is_deleted, attachments, commentText, commentDate, li
     outputRange: [commentBgInitColor, commentBgEndColor]
   })
 
+  const sendLike = async () => {
+    const reqUrl = `https://api.vk.com/method/likes.add?type=${type}&v=5.131&access_token=${accessToken}&owner_id=${ownerId}&item_id=${commentId}`
+    await fetch(reqUrl)
+  }
+
+  const sendUnlike  = async () => {
+    const reqUrl = `https://api.vk.com/method/likes.delete?type=${type}&v=5.131&access_token=${accessToken}&owner_id=${ownerId}&item_id=${commentId}`
+    await fetch(reqUrl)
+  }
+
   const handleLikePress = () => {
     if(!isLiked) {
+      sendLike()
       setLikesCount(prevState => prevState + 1);
       setIsLiked(true);
     } else {
+      sendUnlike()
       setLikesCount(prevState => prevState - 1);
       setIsLiked(false);
     }
@@ -172,6 +184,8 @@ const Comment = ({from_id, is_deleted, attachments, commentText, commentDate, li
         isLightTheme={isLightTheme}
         openCommentMenu={openCommentMenu}
         lang={lang}
+        accessToken={accessToken}
+        type={type}
       />
     </>
   )

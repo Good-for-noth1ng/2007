@@ -130,7 +130,7 @@ const Post = ({data, navigation, openedPost, isLigthTheme, id, accessToken, from
         {
           data.text ? (
             <>
-              <PostText dataText={data.text} toOpen={openedPost} isLightTheme={isLigthTheme}/>
+              <PostText lang={lang} dataText={data.text} toOpen={openedPost} isLightTheme={isLigthTheme}/>
               <PostDivider dividerHeight={6}/>
             </>
           ) : null

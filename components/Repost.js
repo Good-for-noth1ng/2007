@@ -111,7 +111,7 @@ const Repost = ({ data, navigation, openedPost, isLightMode, id, accessToken, fu
         {
           data.copy_history[0].text ? (
             <>
-              <PostText dataText={data.copy_history[0].text} isLightTheme={isLightTheme} toOpen={openedPost}/>
+              <PostText lang={lang} dataText={data.copy_history[0].text} isLightTheme={isLightTheme} toOpen={openedPost}/>
               <PostDivider dividerHeight={6}/>
             </>
           ) : null
@@ -128,7 +128,7 @@ const Repost = ({ data, navigation, openedPost, isLightMode, id, accessToken, fu
       {
         postPhotos ? (
           <>
-            <PostPhotos lang={lang} postPhotos={postPhotos} navigation={navigation} ownerId={data.owner_id} date={data.date} author={data.author}/>
+            <PostPhotos lang={lang} postPhotos={postPhotos} navigation={navigation} ownerId={data.owner_id} date={data.date} author={data.author} accessToken={accessToken}/>
             <PostDivider dividerHeight={5}/>  
           </>
         ) : null
@@ -182,6 +182,7 @@ const Repost = ({ data, navigation, openedPost, isLightMode, id, accessToken, fu
         navigation={navigation}
         data={data}
         isLightTheme={isLightTheme}
+        accessToken={accessToken}
       />
     </View>  
   )

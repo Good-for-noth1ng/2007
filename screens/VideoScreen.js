@@ -135,11 +135,15 @@ const VideoScreen = ({navigation, route}) => {
   //   // return urls[3].split('":"')[1].slice(0, -1)
   // }
 
-  const likePressHandler = (isPressed) => {
+  const likePressHandler = async (isPressed) => {
     if (isPressed) {
+      const url = `https://api.vk.com/method/likes.delete?type=video&v=5.131&access_token=${accessToken}&owner_id=${ownerId}&item_id=${videoId}&access_key=${accessKey}`
+      await fetch(url)
       setLikesCount(prevState => prevState - 1)
       setLiked(false)
     } else {
+      const url = `https://api.vk.com/method/likes.add?type=video&v=5.131&access_token=${accessToken}&owner_id=${ownerId}&item_id=${videoId}&access_key=${accessKey}`
+      await fetch(url)
       setLikesCount(prevState => prevState + 1)
       setLiked(true)
     }
