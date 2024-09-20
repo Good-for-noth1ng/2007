@@ -339,6 +339,7 @@ const PostPhotos = ({postPhotos, navigation, ownerId, date, author, lang, access
                         albumId: imagesForSlides[index].albumId,  
                         width: imagesForSlides[index].props.style.width, 
                         height: imagesForSlides[index].props.style.height,
+                        closeModal: onRequestClose
                       }
                     )
                   }

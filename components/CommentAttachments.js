@@ -149,6 +149,7 @@ const CommentAttachments = ({attachments, navigation, isLightTheme, author, owne
         attachments[i].photo = {...attachments[i].photo, indxToOpen: indx}
         indx += 1
         attachments[i].photo.sizes.sort(function(a, b){return b.width - a.width})
+        // console.log(attachments[i].photo)
         photos.current.push({
           url: attachments[i].photo.sizes[0].url,
           photoId:  attachments[i].photo.id,
@@ -156,6 +157,11 @@ const CommentAttachments = ({attachments, navigation, isLightTheme, author, owne
           text: attachments[i].photo.text,
           userId: attachments[i].photo.user_id,
           date: attachments[i].photo.date,
+          albumId: attachments[i].photo.album_id,
+          likes: attachments[i].photo?.likes?.count,
+          isLiked: attachments[i].photo?.likes?.user_likes,
+          comments: attachments[i].photo?.comments?.count,
+          reposts: attachments[i].photo?.reposts?.count,
         })
       } else if (attachments[i].type === 'doc') {
         if (attachments[i].doc.ext === 'gif') {
@@ -251,7 +257,8 @@ const CommentAttachments = ({attachments, navigation, isLightTheme, author, owne
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={
-                      () => navigation.push(
+                      () => {
+                        navigation.push(
                         'OpenedPhoto',
                         {
                           photoUrl: photos.current[index].url,
@@ -263,8 +270,13 @@ const CommentAttachments = ({attachments, navigation, isLightTheme, author, owne
                           author: author,
                           width: photos.current[index].props.style.width,
                           height: photos.current[index].props.style.height,
+                          albumId: photos.current[index].albumId,
+                          likes: photos.current[index].likes,
+                          reposts: photos.current[index].reposts,
+                          liked: photos.current[index].isLiked,
+                          closeModal: onRequestClose
                         }
-                      ) 
+                      ) }
                     }
                   >
                     <MaterialCommunityIcons name={'comment-outline'} color={COLORS.white} size={20}/>

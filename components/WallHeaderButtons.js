@@ -22,7 +22,7 @@ const WallHeaderButtons = ({ lang, isUserWall, isMember, canWritePrivateMessage,
   }
 
   const navigateToDialog = () => {
-    navigation.push('Dialog')
+    // navigation.push('Dialog')
   }
 
   if (shouldHideButtons) {

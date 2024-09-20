@@ -382,6 +382,10 @@ const UserProfile = ({ navigation, route }) => {
     )
   }
 
+  const onClose = () => {
+    shouldHideTopAndBottom.current = false
+    setIsAvatarVisible(false)
+  }
   // console.log(isAvatarVisible)
   return (
     <SafeAreaView style={[styles.mainContainer, isLightTheme ? {backgroundColor: COLORS.light_smoke} : {backgroundColor: COLORS.background_dark}]}>
@@ -414,10 +418,7 @@ const UserProfile = ({ navigation, route }) => {
             animationType='fade'
             transparent={true}
             visible={isAvatarVisible}
-            onRequestClose={() => {
-              shouldHideTopAndBottom.current = false
-              setIsAvatarVisible(prev => !prev)
-            }}
+            onRequestClose={onClose}
           >
             <ImageViewer
               imageUrls={imagesForSlides.current}
@@ -448,7 +449,7 @@ const UserProfile = ({ navigation, route }) => {
                     <TouchableOpacity activeOpacity={0.5} onPress={() => setIsAvatarVisible(false)}>
                       <AntDesign name={'arrowleft'} size={25} color={COLORS.white}/>
                     </TouchableOpacity>
-                    <Text style={{color: COLORS.white, fontSize: 17}}>{currentIndex + 1} of {imagesForSlides.current.length}</Text>
+                    <Text style={{color: COLORS.white, fontSize: 17}}>{currentIndex + 1} {lang == 'ru' ? 'из' : 'of'} {imagesForSlides.current.length}</Text>
                   </View>
                   <TouchableOpacity onPress={openAvatarDropdown}>
                     <Feather name={'more-vertical'} color={COLORS.white} size={25}/>
@@ -512,6 +513,10 @@ const UserProfile = ({ navigation, route }) => {
                             author: imagesForSlides.current[index].author, 
                             width: imagesForSlides.current[index].props.style.width, 
                             height: imagesForSlides.current[index].props.style.height,
+                            likes: imagesForSlides.current[index].likes,
+                            reposts: imagesForSlides.current[index].reposts,
+                            liked: imagesForSlides.current[index].isLiked,
+                            closeModal: onClose
                           }
                         )
                       }

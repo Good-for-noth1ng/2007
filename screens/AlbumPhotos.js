@@ -347,7 +347,8 @@ const AlbumPhotos = ({ navigation, route }) => {
                             author: author,
                             albumId: photosList[index].album_id,
                             width: photosList[index].sizes[0].width,
-                            height: photosList[index].sizes[0].height
+                            height: photosList[index].sizes[0].height,
+                            closeModal: onRequestClose 
                           })
                         }
                       >

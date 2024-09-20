@@ -24,14 +24,15 @@ const OpenedPhoto = ({ navigation, route }) => {
   const isLightTheme = useSelector(state => state.colorScheme.isCurrentSchemeLight)
   const accessToken = useSelector(state => state.user.accessToken)
   const isGlobalShadowExpanded = useSelector(state => state.globalShadow.isOpen)
-  const { ownerId, photoUrl, date, author, width, height, text, photoId, userId, albumId } = route.params
+  const { ownerId, photoUrl, date, author, width, height, text, photoId, userId, albumId, closeModal, likes, reposts, liked } = route.params
+  console.log(albumId)
   const res = width / height
   // console.log(photoId)
   // const [isLoading, setIsLoading] = React.useState(false)
   const [comments, setComments] = React.useState([])
-  const [likesCount, setLikesCount] = React.useState(0)
-  const [isLiked, setIsLiked] = React.useState(false)
-  const [repostsCount, setRepostsCount] = React.useState(0)
+  const [likesCount, setLikesCount] = React.useState(likes ? likes : 0)
+  const [isLiked, setIsLiked] = React.useState(liked == 1)
+  const [repostsCount, setRepostsCount] = React.useState(reposts ? reposts : 0)
   const [commentsCount, setCommentsCount] = React.useState(-1)
   const count = 5
   const offset = React.useRef(0)
@@ -54,6 +55,10 @@ const OpenedPhoto = ({ navigation, route }) => {
     }, [authorInfoIsOpen.current])
   )
 
+  React.useEffect(() => {
+    closeModal()
+  }, [])
+  
   React.useEffect(() => {
     if (isGlobalShadowExpanded == false) {
       closeCommentMenu()
@@ -87,6 +92,8 @@ const OpenedPhoto = ({ navigation, route }) => {
     const photoInfoRes = await fetch(photoInfoUrl)
     const photoInfoData = await photoInfoRes.json()
     const commentsData = await res.json()
+    console.log(photoInfoData)
+    console.log(commentsData)
     if (commentsData.error) {
       if (commentsData.error.error_code === 7) {
         currentLevelCommentsCount.current = 0
@@ -247,7 +254,7 @@ const OpenedPhoto = ({ navigation, route }) => {
           </> : 
           null
         }
-        {
+        {/* {
           text && (commentsCount > -1) ?
           <DividerWithLine 
               dividerLineHeight={1} 
@@ -256,9 +263,8 @@ const OpenedPhoto = ({ navigation, route }) => {
               dividerColor={isLightTheme ? COLORS.white : COLORS.primary_dark}
           /> :
           null
-        }
+        } */}
         {
-          commentsCount > -1 ?
           <View style={[{width: '100%', justifyContent: 'space-between', flexDirection: 'row', padding: 10, paddingBottom: 5}, isLightTheme ? {backgroundColor: COLORS.white} : {backgroundColor: COLORS.primary_dark}]}>
             <TouchableOpacity 
               style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}
@@ -272,7 +278,7 @@ const OpenedPhoto = ({ navigation, route }) => {
               <FontAwesome name='share' color={COLORS.secondary} size={23}/>
               <Text style={{fontSize: 16, color: COLORS.secondary}}>{repostsCount}</Text>
             </TouchableOpacity>
-          </View> : null
+          </View>
         }
         <DividerWithLine 
           dividerLineHeight={1} 

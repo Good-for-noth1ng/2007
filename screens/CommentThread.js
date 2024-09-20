@@ -163,6 +163,8 @@ const CommentThread = ({navigation, route}) => {
       openCommentMenu={openCommentMenu}
       author={item.author}
       lang={lang}
+      accessToken={accessToken}
+      type={'comment'}
       //add openCommentMenu function
     />
   )

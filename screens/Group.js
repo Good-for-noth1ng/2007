@@ -171,6 +171,7 @@ const Group = ({navigation, route}) => {
     if (avatarsData?.error?.error_code !== 30) {
       imagesForSlides.current = avatarsData.response.items.map(item => {
         const url = item.sizes.sort(function(a, b){return b.width - a.width})[0].url
+        // console.log(item)
         return {
           url,
           photoId: item.id,
@@ -185,7 +186,8 @@ const Group = ({navigation, route}) => {
           likes: item?.likes?.count,
           isLiked: item?.likes?.user_likes,
           comments: item?.comments?.count,
-          reposts: item?.reposts?.count
+          reposts: item?.reposts?.count,
+          albumId: item?.album_id,
         }
       })
     } else {
@@ -374,6 +376,11 @@ const Group = ({navigation, route}) => {
     // )
   }
   
+  const onClose = () => {
+    shouldHideTopAndBottom.current = false
+    setIsAvatarVisible(false)
+  }
+
   return (
     <SafeAreaView style={[styles.feedContainer, isLightTheme ? {backgroundColor: COLORS.light_smoke} : {backgroundColor: COLORS.background_dark}]}>
       <CustomHeader 
@@ -399,12 +406,7 @@ const Group = ({navigation, route}) => {
             animationType='fade'
             transparent={true}
             visible={isAvatarVisible}
-            onRequestClose={
-              () => {
-                shouldHideTopAndBottom.current = false
-                setIsAvatarVisible(prev => !prev)
-              }
-            }
+            onRequestClose={onClose}
           >
             <ImageViewer
               imageUrls={imagesForSlides.current}
@@ -475,7 +477,8 @@ const Group = ({navigation, route}) => {
                     </TouchableOpacity>
                     <TouchableOpacity 
                       onPress={
-                        () => navigation.push(
+                        () => 
+                          navigation.push(
                           'OpenedPhoto', 
                           {
                             photoUrl: imagesForSlides.current[index].url,
@@ -487,6 +490,11 @@ const Group = ({navigation, route}) => {
                             author: imagesForSlides.current[index].author, 
                             width: imagesForSlides.current[index].props.style.width, 
                             height: imagesForSlides.current[index].props.style.height,
+                            albumId: imagesForSlides.current[index].albumId,
+                            likes: imagesForSlides.current[index].likes,
+                            reposts: imagesForSlides.current[index].reposts,
+                            liked: imagesForSlides.current[index].isLiked,
+                            closeModal: onClose
                           }
                         )
                       }
